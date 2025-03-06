@@ -3,20 +3,14 @@ package com.nhnacademy.brickbreaker;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class Brick {
-    private double x; // 벽돌의 x 좌표
-    private double y; // 벽돌의 y 좌표
-    private double width; // 벽돌의 너비
-    private double height; // 벽돌의 높이
+public class Brick extends Rectangle implements Drawble {
+
     private Color color; // 벽돌의 색상
     private boolean isDestroyed; // 벽돌이 파괴되었는지 여부
 
     // 생성자
     public Brick(double x, double y, double width, double height, Color color) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        super(x, y, width, height);
         this.color = color;
         this.isDestroyed = false; // 초기 상태는 파괴되지 않음
     }
@@ -25,7 +19,7 @@ public class Brick {
     public void draw(GraphicsContext gc) {
         if (!isDestroyed) {
             gc.setFill(color);
-            gc.fillRect(x, y, width, height); // 벽돌 그리기
+            gc.fillRect(x - width/2, y - height/2, width, height); // 벽돌 그리기
         }
     }
 
@@ -41,7 +35,7 @@ public class Brick {
 
         // 공이 벽돌의 경계와 충돌했는지 확인
         boolean collision =
-                ballX + ballRadius > x &&
+                        ballX + ballRadius > x &&
                         ballX - ballRadius < x + width &&
                         ballY + ballRadius > y &&
                         ballY - ballRadius < y + height;
@@ -56,6 +50,10 @@ public class Brick {
     // Getter와 Setter (필요 시 사용)
     public boolean isDestroyed() {
         return isDestroyed;
+    }
+
+    public void setDestroyed() {
+        this.isDestroyed = true;
     }
 
     public double getX() {

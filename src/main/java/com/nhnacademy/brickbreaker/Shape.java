@@ -4,7 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 
-public abstract class Shape {
+public abstract class Shape
+{
     protected double x; // 공의 현재 x 좌표
     protected double y; // 공의 현재 y 좌표
     protected double MaxX;
@@ -13,42 +14,15 @@ public abstract class Shape {
     protected double MinY;
 
 
-    // 생성자
-    public Shape(double x, double y, double width, double height) {
-        this.x = x;
-        this.y = y;
-        this.MaxX = x + width;
-        this.MaxY = y + height;
-        this.MinX = x - width;
-        this.MinY = y - height;
-    }
-
-    public Shape() {
-
-    }
 
     // Getter와 Setter (필요 시 사용)
-    public double getX() {
-        return x;
-    }
+    public abstract double getX();
 
-    public double getY() {
-        return y;
-    }
+    public abstract double getY();
 
-    public double getMinX(){
-        return MinX;
-    }
-
-    public double getMinY(){
-        return MinY;
-    }
-
-    public double getMaxX(){
-        return MaxX;
-    }
-    public double getMaxY(){
-        return MaxY;
-    }
+    public abstract double getMinX();
+    public abstract double getMinY();
+    public abstract double getMaxX();
+    public abstract double getMaxY();
 }
 
