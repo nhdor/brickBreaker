@@ -80,8 +80,15 @@ public class Ball extends Circle implements Drawble,Movable {
         double shapeTop = shape.getMinY();  // 중앙 기준 위쪽
         double shapeBottom = shape.getMaxY(); // 중앙 기준 아래쪽
 
-        return ballRight >= shapeLeft && ballLeft <= shapeRight &&
-                ballBottom >= shapeTop && ballTop <= shapeBottom;
+        if(ballRight >= shapeLeft && ballLeft <= shapeRight &&
+                ballBottom >= shapeTop && ballTop <= shapeBottom){
+            setX(((ballRight+ballLeft)/2));
+            setY(((ballTop+ballBottom)/2));
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 

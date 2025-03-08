@@ -83,8 +83,6 @@ public class Main extends Application {
             }
         }
 
-
-
         // 게임 루프: 매 프레임마다 호출되는 메서드
         gameLoop = new AnimationTimer() {
             @Override
@@ -114,6 +112,7 @@ public class Main extends Application {
                     if(shape instanceof Brick && ball.isCollisionDetected(shape)) {
                         ((Brick) shape).setDestroyed();
                         ball.pause();
+                        shapes.remove(shape);
                         ball.setDx(0);
                         ball.setDy(0);
                         ball.resume();
@@ -138,13 +137,12 @@ public class Main extends Application {
                     ball.setDx(-ball.getDx());
                     ball.setDy(-ball.getDy());
                 }
-
                 // Paddle 경계 확인 및 그리기: 패들이 화면 경계를 벗어나지 않도록 확인하고 그리기
                 paddle.checkBounds(canvas.getWidth());
                 paddle.draw(gc); // 패들 그리기
-
             }
         };
+
         gameLoop.start(); // 게임 루프 시작
 
         // 레이아웃 설정: StackPane을 사용하여 캔버스를 화면에 배치
