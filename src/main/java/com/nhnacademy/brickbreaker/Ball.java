@@ -67,40 +67,21 @@ public class Ball extends Circle implements Drawble,Movable {
         y += dy; // y축 위치 업데이트
     }
 
-
     //주어진 '객체'와 충돌했는지 감지
     @Override
-    public boolean isCollisionDetected(Shape other) {
+    public boolean isCollisionDetected(Shape shape) {
+        double ballLeft = this.x - this.radius;
+        double ballRight = this.x + this.radius;
+        double ballTop = this.y - this.radius;
+        double ballBottom = this.y + this.radius;
 
-        double ballX = this.getX();
-        double ballY = this.getY();
-        double ballRadius = this.getRadius();
+        double shapeLeft = shape.getMinX();  // 중앙 기준 왼쪽
+        double shapeRight = shape.getMaxX(); // 중앙 기준 오른쪽
+        double shapeTop = shape.getMinY();  // 중앙 기준 위쪽
+        double shapeBottom = shape.getMaxY(); // 중앙 기준 아래쪽
 
-        // 벽(브릭)의 위치와 크기
-        double brickX = other.getX();
-        double brickY = other.getY();
-        double brickWidth = other.getMaxX()-other.getMinX();
-        double brickHeight = other.getMaxY()-other.getMinY();
-
-        // 공의 가장 가까운 위치를 구하기 (벽의 범위 안에서)
-        double closestX = Math.max(brickX, Math.min(ballX, brickX + brickWidth));  // 공의 X가 벽의 왼쪽 또는 오른쪽 경계 내에 오게끔 조정
-        double closestY = Math.max(brickY, Math.min(ballY, brickY + brickHeight));  // 공의 Y가 벽의 위쪽 또는 아래쪽 경계 내에 오게끔 조정
-
-        // 충돌 지점과 공의 중심 간의 거리 계산
-        double deltaX = ballX - closestX;
-        double deltaY = ballY - closestY;
-
-        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-
-        boolean collision = distance < ballRadius;
-
-        if (collision) {
-            System.out.println("공이 벽에 충돌했습니다! 충돌 지점: (" + closestX + ", " + closestY + ")");
-            this.setX(closestX);
-            this.setY(closestY);
-        }
-        return collision;
+        return ballRight >= shapeLeft && ballLeft <= shapeRight &&
+                ballBottom >= shapeTop && ballTop <= shapeBottom;
     }
 
 
@@ -112,6 +93,13 @@ public class Ball extends Circle implements Drawble,Movable {
         return dx;
     }
 
+    public double getSaved_dx(){
+        return saved_dx;
+    }
+
+    public double getSaved_dy(){
+        return saved_dy;
+    }
 
     //사용 X
     @Override
@@ -122,13 +110,13 @@ public class Ball extends Circle implements Drawble,Movable {
         this.dy = 0;
     }
 
-
     //사용 X
     @Override
     public void resume() {
         if(this.dx == 0 && this.dy == 0){
             this.dx = -this.saved_dx;
             this.dy = -this.saved_dy;
+            System.out.println("resume!");
         }
     }
 

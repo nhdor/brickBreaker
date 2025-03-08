@@ -3,7 +3,6 @@ package com.nhnacademy.brickbreaker;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-
 public class Paddle extends Rectangle implements Drawble,Movable {
 
     double dx;
@@ -105,8 +104,6 @@ public class Paddle extends Rectangle implements Drawble,Movable {
         gc.setFill(color);
         gc.fillRect(x - width / 2, y - height / 2, width, height); // 중심을 기준으로 사각형 그리기
     }
-
-
 
     // 패들이 화면 경계를 벗어나지 않도록 제한
     public void checkBounds(double canvasWidth) {

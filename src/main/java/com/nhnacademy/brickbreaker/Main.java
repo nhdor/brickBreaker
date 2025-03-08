@@ -1,4 +1,5 @@
 package com.nhnacademy.brickbreaker;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -13,7 +14,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,31 +105,27 @@ public class Main extends Application {
                 ball.draw(gc); // 공 그리기
 
 
-
-
                 // 객체 그리기 & 충돌 감지
                 for (Shape shape : shapes) {
                     if(shape instanceof Drawble) ((Drawble)shape).draw(gc);
-
                 }
 
                 for (Shape shape : shapes) {
                     if(shape instanceof Brick && ball.isCollisionDetected(shape)) {
                         ((Brick) shape).setDestroyed();
                         ball.pause();
-                        ball.setDx(-ball.getDx());
-                        ball.setDy(-ball.getDy());
+                        ball.setDx(0);
+                        ball.setDy(0);
                         ball.resume();
+                        break;
                     }else if(shape instanceof Wall && ball.isCollisionDetected(shape)) {
-                        ball.pause();
-                        ball.setDx(-ball.getDx());
-                        ball.setDy(-ball.getDy());
+                      ball.pause();
+                        ball.setDx(0);
+                        ball.setDy(0);
                         ball.resume();
+                        break;
                     }
                 }
-
-
-
 
                 //패들 이동
                 if(paddle.isMoving){
@@ -199,7 +195,6 @@ public class Main extends Application {
             });
         });
     }
-
 
     public static void main(String[] args) {
         launch(args); // JavaFX 애플리케이션 시작
