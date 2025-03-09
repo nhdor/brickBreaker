@@ -10,10 +10,10 @@ public class Rectangle extends Shape {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.MaxX = x+width;
-        this.MinX = x-width;
-        this.MaxY = y+height;
-        this.MinY = y-height;
+        this.MaxX = x+width/2;
+        this.MinX = x-width/2;
+        this.MaxY = y+height/2;
+        this.MinY = y-height/2;
     }
 
     @Override
