@@ -3,7 +3,7 @@ package com.nhnacademy.brickbreaker;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class Ball extends Circle implements Drawble,Movable {
+public class Ball extends Circle implements Drawble,Movable,Bounceable {
 
     private Color color; // 공의 색상
     private double dx;
@@ -11,6 +11,7 @@ public class Ball extends Circle implements Drawble,Movable {
     private double saved_dx;
     private double saved_dy;
     private boolean collided = false;
+    private boolean isPaused = false; // 일시정지 상태를 저장
 
 
     // 생성자
@@ -18,8 +19,6 @@ public class Ball extends Circle implements Drawble,Movable {
         super(x,y,radius);
         this.dx = dx;
         this.dy = dy;
-        this.saved_dx = dx;
-        this.saved_dy = dy;
         this.color = color;
     }
 
@@ -80,6 +79,7 @@ public class Ball extends Circle implements Drawble,Movable {
         double shapeTop = shape.getMinY();  // 중앙 기준 위쪽
         double shapeBottom = shape.getMaxY(); // 중앙 기준 아래쪽
 
+
         if(ballRight >= shapeLeft && ballLeft <= shapeRight &&
                 ballBottom >= shapeTop && ballTop <= shapeBottom){
             setX(((ballRight+ballLeft)/2));
@@ -111,18 +111,23 @@ public class Ball extends Circle implements Drawble,Movable {
     //사용 X
     @Override
     public void pause() {
-        this.saved_dx = this.dx;  // 현재 속도를 저장
-        this.saved_dy = this.dy;
-        this.dx = 0;  // 속도 0으로 설정
-        this.dy = 0;
+        if (!isPaused) { // 이미 일시정지 상태라면 다시 실행하지 않음
+            this.saved_dx = dx;
+            this.saved_dy = dy;
+            this.dx = 0;
+            this.dy = 0;
+            isPaused = true;  // 일시정지 상태 설정
+            System.out.println("pause!");
+        }
     }
 
     //사용 X
     @Override
     public void resume() {
-        if(this.dx == 0 && this.dy == 0){
-            this.dx = -this.saved_dx;
+        if (isPaused) { // 일시정지 상태일 때만 실행
+            this.dx = this.saved_dx;
             this.dy = -this.saved_dy;
+            isPaused = false;  // 일시정지 해제
             System.out.println("resume!");
         }
     }
@@ -133,5 +138,10 @@ public class Ball extends Circle implements Drawble,Movable {
 
     public boolean isCollided() {
         return collided;
+    }
+
+    @Override
+    public void bounceOff(double X, double Y) {
+
     }
 }

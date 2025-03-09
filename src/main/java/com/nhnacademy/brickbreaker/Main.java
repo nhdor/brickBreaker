@@ -14,7 +14,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Main extends Application {
@@ -104,39 +106,80 @@ public class Main extends Application {
 
 
                 // 객체 그리기 & 충돌 감지
-                for (Shape shape : shapes) {
+                for (Iterator<Shape> iterator = shapes.iterator(); iterator.hasNext();) {
+                    Shape shape = iterator.next();
                     if(shape instanceof Drawble) ((Drawble)shape).draw(gc);
-                }
+                    {
+                        if(shape instanceof Brick && ball.isCollisionDetected(shape)) {
+                            ((Brick) shape).setDestroyed();
+                            ball.pause();
 
-                for (Shape shape : shapes) {
-                    if(shape instanceof Brick && ball.isCollisionDetected(shape)) {
-                        ((Brick) shape).setDestroyed();
-                        ball.pause();
-                        shapes.remove(shape);
-                        ball.setDx(0);
-                        ball.setDy(0);
-                        ball.resume();
-                        break;
-                    }else if(shape instanceof Wall && ball.isCollisionDetected(shape)) {
-                      ball.pause();
-                        ball.setDx(0);
-                        ball.setDy(0);
-                        ball.resume();
-                        break;
+                            //충돌지점
+                            double collisionPointX = ball.getX();
+                            double collisionPointY = ball.getMinY();
+
+                            //<1>좌측 아래
+                            if(collisionPointX >= shape.getMinX() && collisionPointX <= shape.getMinX() +(((Brick) shape).getWidth())*1/2 && ball.getMinY() <= shape.getMaxY() ) {
+                                iterator.remove();
+                                ball.resume();
+                                System.out.println("좌측 아래");
+                                break;
+                                //우측 아래
+                            }else if(collisionPointX <= shape.getMaxX() && collisionPointX >= shape.getMaxX() - (((Brick) shape).getWidth())*1/2 && ball.getMinY() <= shape.getMaxY()){
+                                iterator.remove();
+                                ball.resume();
+                                System.out.println("우측 아래");
+                                break;
+                                //좌측 위
+                            }else if(collisionPointX >= shape.getMinX() && collisionPointX <= shape.getMinX() +(((Brick) shape).getWidth())*1/2 && ball.getMaxY() >= shape.getMinY()){
+                                iterator.remove();
+                                ball.resume();
+                                System.out.println("좌측 위");
+                                break;
+                                //우측 위
+                            }else if(collisionPointX <= shape.getMaxX() && collisionPointX >= shape.getMaxX() - (((Brick) shape).getWidth())*1/2 && ball.getMaxY() >= shape.getMinY()){
+                                iterator.remove();
+                                ball.resume();
+                                System.out.println("우측 위");
+                                break;
+                                //상/단 중앙(2)
+                            }else if(shape.getMinX() + (((Brick) shape).getWidth())*1/2 <= collisionPointX && collisionPointX <= shape.getMaxX() - (((Brick) shape).getWidth())*1/2 && ball.getMinY() >= shape.getMaxY()){
+                                iterator.remove();
+                                ball.setDy(-ball.getSaved_dy());
+                                System.out.println("상/하 중앙");
+                                break;
+                                //좌/우 중앙(2)
+                            }else if(collisionPointX >= shape.getMinX() && ball.getMinY() <= shape.getMaxY() && ball.getMaxY() >= shape.getMinY()){
+                                iterator.remove();
+                                ball.setDx(-ball.getSaved_dx());
+                                System.out.println("좌/우 중앙");
+                            }else{// 그 외의 경우
+                                iterator.remove();
+                                ball.resume();
+                                break;
+                            }
+                        }else if(shape instanceof Wall && ball.isCollisionDetected(shape)) {
+                            ball.pause();
+                            ball.setDx(0);
+                            ball.setDy(0);
+                            ball.resume();
+                            break;
+                        }
                     }
                 }
+
+                System.out.println(ball.getDy());
 
                 //패들 이동
                 if(paddle.isMoving){
                     paddle.move();
                 }
-                // 패들 충돌 처리
-                boolean collided = paddle.isCollisionDetected(ball);
 
-                if (collided) {
+                if(ball.isCollisionDetected(paddle)){
                     ball.setDx(-ball.getDx());
                     ball.setDy(-ball.getDy());
                 }
+
                 // Paddle 경계 확인 및 그리기: 패들이 화면 경계를 벗어나지 않도록 확인하고 그리기
                 paddle.checkBounds(canvas.getWidth());
                 paddle.draw(gc); // 패들 그리기
